@@ -1,0 +1,109 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Linea,Int, Cadena, If, Else, Do, While, For,T_dato,Comillas,
+    Igual, Suma, Resta, Multiplicacion, Division, Op_logico, Op_relacional,
+    Op_atribucion, Op_incremento, Op_booleano, Parentesis_a, Parentesis_c,
+    Llave_a, Llave_c, Corchete_a, Corchete_c, Main, P_coma, Identificador,
+     ERROR, Class, Op_Potencia, Op_Dividir, Op_Multiplicar, Op_Restar,
+    Op_Sumar, Print, Return, Memb_Access, Assign, Identificador_Var, Power;
+
+terminal Integer  Numero;
+
+non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_FOR, IF, IF_ELSE,
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, SUMA, RETORNO,RESTA,
+    DIVISION, MULTIPLICACION, OPERACIONES, CLASE, PARAMETRO, LLAMADA, IMPRIMIR, 
+    OP_ARISMETICAS, IDENTIFICADORES,CLASE2,INICIO2, NUMERO;
+
+start with INICIO ; 
+
+INICIO ::= CLASE:sen {: RESULT = sen; :} 
+; 
+  
+CLASE ::=  Class Identificador Llave_a 
+           Int IDENTIFICADORES Assign Numero:n1 P_coma 
+
+           OPERACIONES 
+
+           Identificador Parentesis_a Parentesis_c Llave_a 
+
+           Print Memb_Access OP_ARISMETICAS Parentesis_a Numero:n2 Parentesis_c P_coma   
+
+           Llave_c 
+
+           Llave_c  {: RESULT = n1.intValue() + n2.intValue(); :}
+
+; 
+ 
+
+ IMPRIMIR ::= Print Memb_Access OP_ARISMETICAS Parentesis_a Numero Parentesis_c P_coma  
+;
+ 
+
+OPERACIONES ::= 
+
+    SUMA|RESTA|DIVISION|MULTIPLICACION 
+; 
+
+LLAMADA ::= Identificador Parentesis_a Parentesis_c Llave_a IMPRIMIR Llave_c |
+            Identificador Parentesis_a Parentesis_c Llave_a IMPRIMIR IMPRIMIR  Llave_c|
+            Identificador Parentesis_a Parentesis_c Llave_a IMPRIMIR IMPRIMIR  IMPRIMIR Llave_c|
+            Identificador Parentesis_a Parentesis_c Llave_a IMPRIMIR IMPRIMIR IMPRIMIR IMPRIMIR  Llave_c|
+            Identificador Parentesis_a Parentesis_c Llave_a IMPRIMIR IMPRIMIR IMPRIMIR IMPRIMIR IMPRIMIR  Llave_c
+;
+
+
+OP_ARISMETICAS ::= Op_Sumar  |
+                   Op_Restar  |
+                   Op_Dividir |
+                   Op_Multiplicar
+;
+
+SUMA ::=  Int Op_Sumar Parentesis_a PARAMETRO Parentesis_c 
+            Llave_a RETORNO Llave_c ;
+
+RESTA ::= Int Op_Restar Parentesis_a PARAMETRO Parentesis_c 
+         Llave_a RETORNO Llave_c;
+
+DIVISION ::= Int Op_Dividir Parentesis_a PARAMETRO Parentesis_c 
+         Llave_a RETORNO Llave_c ;
+
+MULTIPLICACION ::= Int Op_Multiplicar Parentesis_a PARAMETRO Parentesis_c 
+         Llave_a RETORNO Llave_c;
+
+                          
+RETORNO ::= Return Memb_Access  IDENTIFICADORES Suma IDENTIFICADORES P_coma|
+            Return Memb_Access  IDENTIFICADORES Resta IDENTIFICADORES P_coma|
+            Return Memb_Access  IDENTIFICADORES Division IDENTIFICADORES P_coma|
+            Return Memb_Access  IDENTIFICADORES Multiplicacion IDENTIFICADORES P_coma
+            ;
+
+PARAMETRO ::= 
+    Int IDENTIFICADORES |
+    Int IDENTIFICADORES  Int IDENTIFICADORES | 
+    Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES |
+    Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES|
+    Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES  Int IDENTIFICADORES ;
+
+IDENTIFICADORES ::= Identificador | Identificador_Var
+            
+;
+DECLARACION ::= 
+    Int IDENTIFICADORES P_coma | 
+    Int IDENTIFICADORES Assign Numero P_coma
+    
+;
