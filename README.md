@@ -62,7 +62,17 @@ comparar valores enteros.
 
 Ejemplo del formato correcto para esto será:
 
-if(15>param)
+clase pueba
+{ 
+int entero = 10 ;
+
+int sumar (int param )
 {
-imprimir -> 15+param;
+retorna -> entero + param;
 }
+
+Prueba()
+{
+imprimir -> sumar(10); 
+} 
+} 
